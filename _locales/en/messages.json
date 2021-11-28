@@ -1,16 +1,16 @@
 {
   "extensionName": {
-    "message": "Menu demo",
+    "message": "Hide header!",
     "description": "Name of the extension."
   },
 
   "extensionDescription": {
-    "message": "Demonstrates the menus API.",
+    "message": "Hide annoying headers that block the view.",
     "description": "Description of the add-on."
   },
 
   "menuItemMarked": {
-    "message": "Show marked!",
+    "message": "This is the annoying header",
     "description": "Title of context menu item that prints what is marked."
   }
 
