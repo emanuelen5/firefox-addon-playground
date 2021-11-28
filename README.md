@@ -1,0 +1,1 @@
+# Remove irritating headers from websites
