@@ -1,3 +1,5 @@
+let overlays = [];
+
 function create_overlay(node) {
   const el = document.createElement("div");
   const viewport_offset = node.getBoundingClientRect();
@@ -11,16 +13,23 @@ function create_overlay(node) {
   el.style.zIndex = 100;
   el.style.transition = "opacity 2s";
   document.body.appendChild(el);
+  overlays.push(el);
   setTimeout(() => {
     el.style.opacity = 0;
-    el.addEventListener("transitionend", () => {document.body.removeChild(el);}, true);
+    el.addEventListener("transitionend", () => {
+      document.body.removeChild(el);
+      overlays.splice(overlays.indexOf(el), 1);
+    }, true);
   }, 1000);
 }
 
 
 function find_header(node, depth=0) {
   const style = window.getComputedStyle(node);
-  if (style.position == "fixed") {
+  // Make sure that we don't overlay an existing overlay
+  if (overlays.indexOf(node) !== -1) {
+    return {depth: depth, node: undefined, searched_nodes: [node]};
+  } else if (style.position == "fixed") {
     return {depth: depth, node: node, searched_nodes: [node]};
   } else if (style.position == "sticky") {
     return {depth: depth, node: node, searched_nodes: [node]};
@@ -48,7 +57,6 @@ browser.runtime.onMessage.addListener(
       console.log(`Could not find a parent that seems to be a header... Searched ${header.depth} nodes upwards from selection.`);
       console.log("Searched nodes:");
       for (let i=0; i<header.searched_nodes.length; i++) {
-        console.log(i);
         console.log(header.searched_nodes[i]);
       }
     }
