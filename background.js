@@ -19,6 +19,7 @@ browser.menus.onClicked.addListener((info, tab) => {
     case MENU_SELECT:
       console.log("Sending message");
       let sending = browser.tabs.sendMessage(tab.id, {
+        type: info.menuItemId,
         targetElementId: info.targetElementId
       });
       sending.then(
