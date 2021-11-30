@@ -2,29 +2,40 @@ const MENU_SELECT = "menu-marked";
 const TYPE_UNHIDE = "type_unhide";
 
 let overlays = [];
-let hide_overlays = [];
+let hide_overlays = {};
 
-let overlay_id_counter = 1; // FIXME: This resets between reloads
+let overlay_id_counter = 1;
 
 async function save() {
-  await browser.storage.local.set({hide_overlays});
+  const hidden_header_ids = Object.keys(hide_overlays);
+  const save_as = {hidden_header_ids};
+  console.log("Saving as:");
+  console.log(save_as);
+  await browser.storage.local.set(save_as);
+  console.log("Saved!");
 }
 
 function hide_overlay(node) {
   const display_style = node.style.display;
   node.style.display = "none";
-  hide_overlays.push({
-    id: overlay_id_counter++,
+  const start_counter = overlay_id_counter;
+  while (true) {
+    overlay_id_counter += 1;
+    if (start_counter == overlay_id_counter) {
+      console.error("Could not allocate an ID for the overlay.");
+      return;
+    } else if (!hide_overlays[overlay_id_counter]) {
+      break;
+    }
+  }
+  hide_overlays[overlay_id_counter] = {
+    id: overlay_id_counter,
     node: node,
     overridden_style: {
       display: display_style
-  }});
+    }
+  };
   save();
-  // setTimeout(((display_style) => {
-  //   return () => {
-  //     node.style.display = display_style;
-  //   };
-  // })(display_style), 3000);
 }
 
 
@@ -73,6 +84,8 @@ function find_header(node, depth=0) {
 
 browser.runtime.onMessage.addListener(
   (request, sender, send_response) => {
+    console.debug("Got a request:");
+    console.debug(request);
     switch (request.type) {
       case MENU_SELECT:
         const target = browser.menus.getTargetElement(request.targetElementId);
@@ -87,6 +100,8 @@ browser.runtime.onMessage.addListener(
         }
         break;
       case TYPE_UNHIDE:
+        console.log("Unhide message!");
+        console.log(request);
         break;
       default:
         console.error(`Unknown background message received: ${request.type}`)
