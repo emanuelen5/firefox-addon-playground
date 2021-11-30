@@ -1,15 +1,30 @@
 const MENU_SELECT = "menu-marked";
+const TYPE_UNHIDE = "type_unhide";
+
 let overlays = [];
 let hide_overlays = [];
+
+let overlay_id_counter = 1; // FIXME: This resets between reloads
+
+async function save() {
+  await browser.storage.local.set({hide_overlays});
+}
 
 function hide_overlay(node) {
   const display_style = node.style.display;
   node.style.display = "none";
-  setTimeout(((display_style) => {
-    return () => {
-      node.style.display = display_style;
-    };
-  })(display_style), 3000);
+  hide_overlays.push({
+    id: overlay_id_counter++,
+    node: node,
+    overridden_style: {
+      display: display_style
+  }});
+  save();
+  // setTimeout(((display_style) => {
+  //   return () => {
+  //     node.style.display = display_style;
+  //   };
+  // })(display_style), 3000);
 }
 
 
@@ -70,6 +85,8 @@ browser.runtime.onMessage.addListener(
         } else {
           console.log(`Could not find a parent that seems to be a header... Searched ${header.depth} nodes upwards from selection.`);
         }
+        break;
+      case TYPE_UNHIDE:
         break;
       default:
         console.error(`Unknown background message received: ${request.type}`)

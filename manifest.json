@@ -20,9 +20,16 @@
     "matches": ["*://*/*"],
     "js": ["content-script.js"]
   }],
+
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "hide-header!",
+    "default_popup": "./popup.html"
+  },
   
   "permissions": [
-    "menus"
+    "menus",
+    "storage"
   ]
 
 }
