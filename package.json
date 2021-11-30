@@ -1,0 +1,27 @@
+{
+  "name": "hide-header",
+  "version": "0.1.0",
+  "description": "A Firefox extension that can select hide headers from websites.",
+  "scripts": {
+    "build": "web-ext build",
+    "test": "web-ext run",
+    "lint": "web-ext lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emanuelen5/firefox-addon-playground.git"
+  },
+  "keywords": [
+    "web-ext",
+    "firefox"
+  ],
+  "author": "Erasmus Cedernaes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emanuelen5/firefox-addon-playground/issues"
+  },
+  "homepage": "https://github.com/emanuelen5/firefox-addon-playground#readme",
+  "dependencies": {
+    "web-ext": "^6.6.0"
+  }
+}

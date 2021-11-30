@@ -1,5 +1,17 @@
 const MENU_SELECT = "menu-marked";
 let overlays = [];
+let hide_overlays = [];
+
+function hide_overlay(node) {
+  const display_style = node.style.display;
+  node.style.display = "none";
+  setTimeout(((display_style) => {
+    return () => {
+      node.style.display = display_style;
+    };
+  })(display_style), 3000);
+}
+
 
 function create_overlay(node) {
   const el = document.createElement("div");
@@ -53,7 +65,8 @@ browser.runtime.onMessage.addListener(
         if (header.node) {
           console.log(`Found a parent that seems to be a header at depth ${header.depth}:`);
           console.log(header.node);
-          create_overlay(header.node);
+          // create_overlay(header.node);
+          hide_overlay(header.node);
         } else {
           console.log(`Could not find a parent that seems to be a header... Searched ${header.depth} nodes upwards from selection.`);
         }
